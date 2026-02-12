@@ -2,13 +2,15 @@ import { useState, useEffect } from 'react';
 import { Input } from '@/components/Input';
 import { db } from '@/services/database';
 import type { Case } from '@/types';
-import { Search, Users, Calendar, AlertTriangle } from 'lucide-react';
+import { Search, Users, Calendar, AlertTriangle, Trash2, Edit } from 'lucide-react';
 import { useLanguage } from '@/i18n/LanguageContext';
+import { EditCaseModal } from './EditCaseModal';
 
 export function CaseList() {
   const [cases, setCases] = useState<Case[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
+  const [editingCase, setEditingCase] = useState<Case | null>(null);
   const { t } = useLanguage();
 
   useEffect(() => {
@@ -30,6 +32,25 @@ export function CaseList() {
     } else {
       loadCases();
     }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (confirm('حذف هذه الحالة؟ / Delete this case?')) {
+      await db.deleteCase(id);
+      loadCases();
+    }
+  };
+
+  const handleEdit = (caseData: Case) => {
+    setEditingCase(caseData);
+  };
+
+  const handleUpdate = async (updatedCase: Case) => {
+    // Update name field from firstName + lastName
+    const fullName = `${updatedCase.firstName} ${updatedCase.lastName}`;
+    await db.updateCase(updatedCase.id, { ...updatedCase, name: fullName });
+    setEditingCase(null);
+    loadCases();
   };
 
   const getProblemIcon = (type: string) => {
@@ -88,6 +109,7 @@ export function CaseList() {
                   <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">{t.age}</th>
                   <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">{t.problem}</th>
                   <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">{t.date}</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">إجراءات</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -122,6 +144,24 @@ export function CaseList() {
                         {new Date(c.date).toLocaleDateString('fr-FR')}
                       </div>
                     </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleEdit(c)}
+                          className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          title="تعديل / Edit"
+                        >
+                          <Edit className="w-5 h-5" />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(c.id)}
+                          className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                          title="حذف / Delete"
+                        >
+                          <Trash2 className="w-5 h-5" />
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -133,6 +173,14 @@ export function CaseList() {
       <div className="glass rounded-xl p-4 flex items-center justify-between">
         <span className="text-slate-600 font-medium">📊 {t.total}: <span className="text-blue-600 font-bold text-lg">{cases.length}</span> {t.cases}</span>
       </div>
+
+      {editingCase && (
+        <EditCaseModal
+          caseData={editingCase}
+          onClose={() => setEditingCase(null)}
+          onSave={handleUpdate}
+        />
+      )}
     </div>
   );
 }

@@ -41,6 +41,24 @@ class DatabaseService {
     return newCase;
   }
 
+  async updateCase(id: string, caseData: Partial<Case>): Promise<Case | null> {
+    const db = this.getDB();
+    const index = db.cases.findIndex(c => c.id === id);
+    if (index === -1) return null;
+    db.cases[index] = { ...db.cases[index], ...caseData };
+    this.saveDB(db);
+    return db.cases[index];
+  }
+
+  async deleteCase(id: string): Promise<boolean> {
+    const db = this.getDB();
+    const index = db.cases.findIndex(c => c.id === id);
+    if (index === -1) return false;
+    db.cases.splice(index, 1);
+    this.saveDB(db);
+    return true;
+  }
+
   async getCasesByDateRange(startDate: string, endDate: string): Promise<Case[]> {
     return this.getDB().cases.filter(c => c.date >= startDate && c.date <= endDate);
   }
