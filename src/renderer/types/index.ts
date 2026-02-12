@@ -1,13 +1,14 @@
 export type Gender = 'male' | 'female';
 
-export type ProblemType = 
+export type CaseType = 
   | 'violence'
+  | 'addiction'
   | 'neglect'
-  | 'abuse'
+  | 'exploitation'
   | 'family_issues'
-  | 'education'
-  | 'health'
   | 'other';
+
+export type ProblemType = CaseType;
 
 export type ViolenceType = 'physical' | 'sexual' | 'psychological' | 'social';
 export type SubstanceType = 'cigarettes' | 'alcohol' | 'drugs' | 'glue' | 'none';

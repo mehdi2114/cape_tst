@@ -53,14 +53,25 @@ export function CaseList() {
     loadCases();
   };
 
+  const getCaseTypeLabel = (type: string) => {
+    const labels: Record<string, string> = {
+      violence: t.caseTypeViolence || 'Violence',
+      addiction: t.caseTypeAddiction || 'Addiction',
+      neglect: t.caseTypeNeglect || 'Neglect',
+      exploitation: t.caseTypeExploitation || 'Exploitation',
+      family_issues: t.caseTypeFamilyIssues || 'Family Issues',
+      other: t.caseTypeOther || 'Other'
+    };
+    return labels[type] || type;
+  };
+
   const getProblemIcon = (type: string) => {
     const icons: Record<string, string> = {
       violence: '⚠️',
+      addiction: '🚬',
       neglect: '🚫',
-      abuse: '🛑',
+      exploitation: '⛔',
       family_issues: '👨👩👧',
-      education: '📚',
-      health: '🏥',
       other: '📋'
     };
     return icons[type] || '📋';
@@ -135,7 +146,7 @@ export function CaseList() {
                     <td className="px-6 py-4 whitespace-nowrap text-slate-700 font-medium">{c.age} {t.years}</td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className="px-3 py-1 rounded-full text-sm font-medium bg-amber-100 text-amber-700">
-                        {getProblemIcon(c.problemType)} {c.problemType}
+                        {getProblemIcon(c.problemType)} {getCaseTypeLabel(c.problemType)}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-slate-600">

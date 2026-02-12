@@ -23,7 +23,7 @@ export default function App() {
   ];
 
   const languages: { code: Language; label: string; flag: string }[] = [
-    { code: 'ar', label: 'العربية', flag: '🇲🇦' },
+    { code: 'ar', label: 'العربية', flag: 'AR' },
     { code: 'fr', label: 'Français', flag: '🇫🇷' },
     { code: 'en', label: 'English', flag: 'EN' }
   ];
@@ -73,32 +73,6 @@ export default function App() {
           })}
         </nav>
 
-        {/* Language Switcher */}
-        <div className="p-4 border-t border-white/10">
-          <div className="glass rounded-xl p-3">
-            <div className="flex items-center gap-2 mb-2">
-              <Languages className="w-4 h-4 text-slate-600" />
-              <span className="text-xs font-semibold text-slate-700">Language</span>
-            </div>
-            <div className="flex gap-1">
-              {languages.map(lang => (
-                <button
-                  key={lang.code}
-                  onClick={() => setLanguage(lang.code)}
-                  className={`flex-1 px-2 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                    language === lang.code
-                      ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg'
-                      : 'bg-white/50 text-slate-600 hover:bg-white/80'
-                  }`}
-                  title={lang.label}
-                >
-                  {lang.flag}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-
         {/* Footer */}
         <div className="p-6 border-t border-white/10">
           <div className="glass rounded-xl p-4 text-center">
@@ -111,12 +85,38 @@ export default function App() {
       {/* Main Content */}
       <main className="flex-1 overflow-auto">
         <div className="max-w-7xl mx-auto p-8">
-          {/* Header */}
-          <div className="mb-8 animate-fade-in">
-            <h2 className="text-4xl font-black text-slate-800 mb-2">
-              {navItems.find(item => item.id === currentView)?.label}
-            </h2>
-            <p className="text-slate-600">{t.professionalManagement}</p>
+          {/* Header with Language Switcher */}
+          <div className="mb-8 animate-fade-in flex items-start justify-between">
+            <div>
+              <h2 className="text-4xl font-black text-slate-800 mb-2">
+                {navItems.find(item => item.id === currentView)?.label}
+              </h2>
+              <p className="text-slate-600">{t.professionalManagement}</p>
+            </div>
+            
+            {/* Language Switcher - Top Right */}
+            <div className="glass rounded-xl p-3 shadow-lg">
+              <div className="flex items-center gap-2 mb-2">
+                <Languages className="w-4 h-4 text-slate-600" />
+                <span className="text-xs font-semibold text-slate-700">Language</span>
+              </div>
+              <div className="flex gap-1">
+                {languages.map(lang => (
+                  <button
+                    key={lang.code}
+                    onClick={() => setLanguage(lang.code)}
+                    className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                      language === lang.code
+                        ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg'
+                        : 'bg-white/50 text-slate-600 hover:bg-white/80'
+                    }`}
+                    title={lang.label}
+                  >
+                    {lang.flag}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
 
           {/* Content */}

@@ -3,7 +3,7 @@ import { Input } from '@/components/Input';
 import { Select } from '@/components/Select';
 import { Button } from '@/components/Button';
 import { db } from '@/services/database';
-import type { Gender, ViolenceType, SubstanceType, MedicalHistory } from '@/types';
+import type { Gender, ViolenceType, SubstanceType, MedicalHistory, CaseType } from '@/types';
 import { FileText, CheckCircle } from 'lucide-react';
 import { useLanguage } from '@/i18n/LanguageContext';
 
@@ -14,6 +14,7 @@ export function CaseFormArabic({ onSuccess }: { onSuccess?: () => void }) {
     completedBy: '',
     sender: '',
     reportSource: '',
+    caseType: 'violence' as CaseType,
     firstName: '',
     lastName: '',
     birthDate: '',
@@ -92,7 +93,7 @@ export function CaseFormArabic({ onSuccess }: { onSuccess?: () => void }) {
         ...formData,
         name: `${formData.firstName} ${formData.lastName}`,
         age,
-        problemType: 'violence',
+        problemType: formData.caseType,
         date: new Date().toISOString().split('T')[0]
       } as any);
       
@@ -129,6 +130,22 @@ export function CaseFormArabic({ onSuccess }: { onSuccess?: () => void }) {
             <Input label={t.completedBy} value={formData.completedBy} onChange={e => setFormData({...formData, completedBy: e.target.value})} required />
             <Input label={t.sender} value={formData.sender} onChange={e => setFormData({...formData, sender: e.target.value})} />
             <Input label={t.reportSource} value={formData.reportSource} onChange={e => setFormData({...formData, reportSource: e.target.value})} />
+          </div>
+          
+          <div>
+            <label className="text-sm font-semibold text-slate-700 mb-2 block">{t.caseType}</label>
+            <select 
+              value={formData.caseType} 
+              onChange={e => setFormData({...formData, caseType: e.target.value as CaseType})}
+              className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300"
+            >
+              <option value="violence">{t.caseTypeViolence}</option>
+              <option value="addiction">{t.caseTypeAddiction}</option>
+              <option value="neglect">{t.caseTypeNeglect}</option>
+              <option value="exploitation">{t.caseTypeExploitation}</option>
+              <option value="family_issues">{t.caseTypeFamilyIssues}</option>
+              <option value="other">{t.caseTypeOther}</option>
+            </select>
           </div>
         </div>
 

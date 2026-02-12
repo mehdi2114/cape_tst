@@ -40,8 +40,20 @@ export function Dashboard() {
     );
   }
 
+  const getCaseTypeLabel = (type: string) => {
+    const labels: Record<string, string> = {
+      violence: t.caseTypeViolence || 'Violence',
+      addiction: t.caseTypeAddiction || 'Addiction',
+      neglect: t.caseTypeNeglect || 'Neglect',
+      exploitation: t.caseTypeExploitation || 'Exploitation',
+      family_issues: t.caseTypeFamilyIssues || 'Family Issues',
+      other: t.caseTypeOther || 'Other'
+    };
+    return labels[type] || type;
+  };
+
   const problemsChartData = Object.entries(statsData.problemsDistribution || {}).map(([name, value]) => ({
-    name: name.replace('_', ' '),
+    name: getCaseTypeLabel(name),
     value,
     fill: COLORS[Math.floor(Math.random() * COLORS.length)]
   })).filter(item => item.value > 0);

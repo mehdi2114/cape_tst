@@ -3,7 +3,7 @@ import { Input } from '@/components/Input';
 import { Select } from '@/components/Select';
 import { Button } from '@/components/Button';
 import { X } from 'lucide-react';
-import type { Case, Gender, ViolenceType } from '@/types';
+import type { Case, Gender, ViolenceType, CaseType } from '@/types';
 import { useLanguage } from '@/i18n/LanguageContext';
 
 interface EditCaseModalProps {
@@ -43,6 +43,22 @@ export function EditCaseModal({ caseData, onClose, onSave }: EditCaseModalProps)
               <Input label={t.completedBy} value={editedCase.completedBy} onChange={e => setEditedCase({...editedCase, completedBy: e.target.value})} />
               <Input label={t.sender} value={editedCase.sender} onChange={e => setEditedCase({...editedCase, sender: e.target.value})} />
               <Input label={t.reportSource} value={editedCase.reportSource} onChange={e => setEditedCase({...editedCase, reportSource: e.target.value})} />
+            </div>
+            
+            <div className="mt-4">
+              <label className="text-sm font-semibold text-slate-700 mb-2 block">{t.caseType}</label>
+              <select 
+                value={editedCase.problemType} 
+                onChange={e => setEditedCase({...editedCase, problemType: e.target.value as CaseType})}
+                className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300"
+              >
+                <option value="violence">{t.caseTypeViolence}</option>
+                <option value="addiction">{t.caseTypeAddiction}</option>
+                <option value="neglect">{t.caseTypeNeglect}</option>
+                <option value="exploitation">{t.caseTypeExploitation}</option>
+                <option value="family_issues">{t.caseTypeFamilyIssues}</option>
+                <option value="other">{t.caseTypeOther}</option>
+              </select>
             </div>
           </div>
 
