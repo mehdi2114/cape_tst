@@ -3,11 +3,13 @@ import { Input } from '@/components/Input';
 import { db } from '@/services/database';
 import type { Case } from '@/types';
 import { Search, Users, Calendar, AlertTriangle } from 'lucide-react';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 export function CaseList() {
   const [cases, setCases] = useState<Case[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
+  const { t } = useLanguage();
 
   useEffect(() => {
     loadCases();
@@ -58,12 +60,12 @@ export function CaseList() {
           <div className="p-3 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl shadow-lg">
             <Users className="w-6 h-6 text-white" />
           </div>
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Liste des Cas</h2>
+          <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">{t.casesList}</h2>
         </div>
         
         <Input
           icon={<Search className="w-5 h-5" />}
-          placeholder="Rechercher par nom ou notes..."
+          placeholder={t.searchPlaceholder}
           value={searchQuery}
           onChange={e => handleSearch(e.target.value)}
         />
@@ -72,8 +74,8 @@ export function CaseList() {
       {cases.length === 0 ? (
         <div className="glass rounded-2xl p-12 text-center">
           <AlertTriangle className="w-16 h-16 mx-auto mb-4 text-slate-400" />
-          <p className="text-xl text-slate-600">Aucun cas trouvé</p>
-          <p className="text-slate-500 mt-2">Commencez par ajouter un nouveau cas</p>
+          <p className="text-xl text-slate-600">{t.noCasesFound}</p>
+          <p className="text-slate-500 mt-2">{t.startAddingCases}</p>
         </div>
       ) : (
         <div className="glass rounded-2xl overflow-hidden card-hover">
@@ -81,11 +83,11 @@ export function CaseList() {
             <table className="w-full">
               <thead>
                 <tr className="bg-gradient-to-r from-slate-50 to-slate-100 border-b-2 border-slate-200">
-                  <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Nom</th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Genre</th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Âge</th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Problème</th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Date</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">{t.name}</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">{t.gender}</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">{t.age}</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">{t.problem}</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">{t.date}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -100,15 +102,15 @@ export function CaseList() {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="px-3 py-1 rounded-full text-sm font-medium ${
+                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${
                         c.gender === 'male' 
                           ? 'bg-blue-100 text-blue-700' 
                           : 'bg-pink-100 text-pink-700'
-                      }">
-                        {c.gender === 'male' ? '👦 Garçon' : '👧 Fille'}
+                      }`}>
+                        {c.gender === 'male' ? t.boy : t.girl}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-slate-700 font-medium">{c.age} ans</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-slate-700 font-medium">{c.age} {t.years}</td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className="px-3 py-1 rounded-full text-sm font-medium bg-amber-100 text-amber-700">
                         {getProblemIcon(c.problemType)} {c.problemType}
@@ -129,7 +131,7 @@ export function CaseList() {
       )}
       
       <div className="glass rounded-xl p-4 flex items-center justify-between">
-        <span className="text-slate-600 font-medium">📊 Total: <span className="text-blue-600 font-bold text-lg">{cases.length}</span> cas</span>
+        <span className="text-slate-600 font-medium">📊 {t.total}: <span className="text-blue-600 font-bold text-lg">{cases.length}</span> {t.cases}</span>
       </div>
     </div>
   );

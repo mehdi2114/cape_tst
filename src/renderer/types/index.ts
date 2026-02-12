@@ -108,6 +108,7 @@ export interface Database {
   settings: {
     lastBackup?: string;
   };
+  calendarEvents?: any[];
 }
 
 export interface MonthlyStats {

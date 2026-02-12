@@ -7,6 +7,8 @@ import { stats } from '@/services/stats';
 import { exportService } from '@/services/export';
 import type { YearlyStats, MonthlyStats } from '@/types';
 import { FileDown, TrendingUp, Users, Calendar, BarChart3 } from 'lucide-react';
+import { useLanguage } from '@/i18n/LanguageContext';
+import { monthNames } from '@/i18n/translations';
 
 const COLORS = ['#3B82F6', '#8B5CF6', '#EC4899', '#F59E0B', '#10B981', '#EF4444', '#6366F1'];
 
@@ -15,6 +17,7 @@ export function Dashboard() {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
   const [statsData, setStatsData] = useState<YearlyStats | MonthlyStats | null>(null);
+  const { t, language } = useLanguage();
 
   useEffect(() => {
     loadStats();
@@ -44,13 +47,13 @@ export function Dashboard() {
   })).filter(item => item.value > 0);
 
   const genderData = [
-    { name: 'Garçons', value: statsData.boys || 0, fill: '#3B82F6' },
-    { name: 'Filles', value: statsData.girls || 0, fill: '#EC4899' }
+    { name: t.boys, value: statsData.boys || 0, fill: '#3B82F6' },
+    { name: t.girls, value: statsData.girls || 0, fill: '#EC4899' }
   ].filter(item => item.value > 0);
 
   const monthlyTrend = viewType === 'yearly' && (statsData as YearlyStats).monthlyData
     ? (statsData as YearlyStats).monthlyData.map((m, idx) => ({
-        month: new Date(2024, idx).toLocaleDateString('fr-FR', { month: 'short' }),
+        month: monthNames[language][idx],
         total: m.total
       }))
     : [];
@@ -61,14 +64,14 @@ export function Dashboard() {
       <div className="glass rounded-2xl p-6 flex flex-wrap gap-4 items-center justify-between card-hover">
         <div className="flex items-center gap-3">
           <BarChart3 className="w-6 h-6 text-blue-600" />
-          <h3 className="text-lg font-bold text-slate-800">Période d'Analyse</h3>
+          <h3 className="text-lg font-bold text-slate-800">{t.analysisperiod}</h3>
         </div>
         
         <div className="flex gap-3">
           <Select
             options={[
-              { value: 'monthly', label: '📅 Mensuel' },
-              { value: 'yearly', label: '📆 Annuel' }
+              { value: 'monthly', label: t.monthly },
+              { value: 'yearly', label: t.yearly }
             ]}
             value={viewType}
             onChange={e => setViewType(e.target.value as 'monthly' | 'yearly')}
@@ -78,7 +81,7 @@ export function Dashboard() {
             <Select
               options={Array.from({ length: 12 }, (_, i) => ({
                 value: i.toString(),
-                label: new Date(2024, i).toLocaleDateString('fr-FR', { month: 'long' })
+                label: monthNames[language][i]
               }))}
               value={selectedMonth.toString()}
               onChange={e => setSelectedMonth(parseInt(e.target.value))}
@@ -103,10 +106,10 @@ export function Dashboard() {
               <div className="p-3 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-lg">
                 <TrendingUp className="w-6 h-6 text-white" />
               </div>
-              <h3 className="text-slate-600 font-semibold">Total des Cas</h3>
+              <h3 className="text-slate-600 font-semibold">{t.totalCases}</h3>
             </div>
             <p className="text-5xl font-black bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">{statsData.total || 0}</p>
-            <p className="text-sm text-slate-500 mt-2">📊 Cas enregistrés</p>
+            <p className="text-sm text-slate-500 mt-2">{t.registeredCases}</p>
           </div>
         </div>
 
@@ -117,10 +120,10 @@ export function Dashboard() {
               <div className="p-3 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-xl shadow-lg">
                 <Users className="w-6 h-6 text-white" />
               </div>
-              <h3 className="text-slate-600 font-semibold">Garçons</h3>
+              <h3 className="text-slate-600 font-semibold">{t.boys}</h3>
             </div>
             <p className="text-5xl font-black bg-gradient-to-r from-blue-500 to-cyan-500 bg-clip-text text-transparent">{statsData.boys || 0}</p>
-            <p className="text-sm text-slate-500 mt-2">👦 {statsData.total > 0 ? ((statsData.boys / statsData.total) * 100).toFixed(1) : 0}% du total</p>
+            <p className="text-sm text-slate-500 mt-2">👦 {statsData.total > 0 ? ((statsData.boys / statsData.total) * 100).toFixed(1) : 0}% {t.ofTotal}</p>
           </div>
         </div>
 
@@ -131,10 +134,10 @@ export function Dashboard() {
               <div className="p-3 bg-gradient-to-br from-pink-500 to-rose-600 rounded-xl shadow-lg">
                 <Users className="w-6 h-6 text-white" />
               </div>
-              <h3 className="text-slate-600 font-semibold">Filles</h3>
+              <h3 className="text-slate-600 font-semibold">{t.girls}</h3>
             </div>
             <p className="text-5xl font-black bg-gradient-to-r from-pink-500 to-rose-500 bg-clip-text text-transparent">{statsData.girls || 0}</p>
-            <p className="text-sm text-slate-500 mt-2">👧 {statsData.total > 0 ? ((statsData.girls / statsData.total) * 100).toFixed(1) : 0}% du total</p>
+            <p className="text-sm text-slate-500 mt-2">👧 {statsData.total > 0 ? ((statsData.girls / statsData.total) * 100).toFixed(1) : 0}% {t.ofTotal}</p>
           </div>
         </div>
       </div>
@@ -146,7 +149,7 @@ export function Dashboard() {
           <div className="glass rounded-2xl p-6 card-hover">
             <h3 className="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
               <div className="w-2 h-8 bg-gradient-to-b from-blue-500 to-pink-500 rounded-full"></div>
-              Distribution par Genre
+              {t.genderDistribution}
             </h3>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
@@ -171,8 +174,8 @@ export function Dashboard() {
         ) : (
           <div className="glass rounded-2xl p-6 card-hover flex items-center justify-center h-[380px]">
             <div className="text-center">
-              <p className="text-slate-400 text-lg">📊 Aucune donnée disponible</p>
-              <p className="text-slate-500 text-sm mt-2">Ajoutez des cas pour voir les statistiques</p>
+              <p className="text-slate-400 text-lg">{t.noDataAvailable}</p>
+              <p className="text-slate-500 text-sm mt-2">{t.addCasesToSeeStats}</p>
             </div>
           </div>
         )}
@@ -182,7 +185,7 @@ export function Dashboard() {
           <div className="glass rounded-2xl p-6 card-hover">
             <h3 className="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
               <div className="w-2 h-8 bg-gradient-to-b from-purple-500 to-pink-500 rounded-full"></div>
-              Types de Problèmes
+              {t.problemTypes}
             </h3>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={problemsChartData}>
@@ -208,8 +211,8 @@ export function Dashboard() {
         ) : (
           <div className="glass rounded-2xl p-6 card-hover flex items-center justify-center h-[380px]">
             <div className="text-center">
-              <p className="text-slate-400 text-lg">📊 Aucune donnée disponible</p>
-              <p className="text-slate-500 text-sm mt-2">Ajoutez des cas pour voir les statistiques</p>
+              <p className="text-slate-400 text-lg">{t.noDataAvailable}</p>
+              <p className="text-slate-500 text-sm mt-2">{t.addCasesToSeeStats}</p>
             </div>
           </div>
         )}
@@ -220,7 +223,7 @@ export function Dashboard() {
         <div className="glass rounded-2xl p-6 card-hover">
           <h3 className="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
             <div className="w-2 h-8 bg-gradient-to-b from-emerald-500 to-blue-500 rounded-full"></div>
-            Évolution Mensuelle
+            {t.monthlyEvolution}
           </h3>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={monthlyTrend}>
@@ -257,17 +260,17 @@ export function Dashboard() {
       <div className="glass rounded-2xl p-6 card-hover">
         <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
           <FileDown className="w-5 h-5" />
-          Exporter les Rapports
+          {t.exportReports}
         </h3>
         <div className="flex flex-wrap gap-3">
           <Button onClick={() => exportService.exportToPDF(statsData, viewType)} size="lg">
-            📄 Exporter PDF
+            {t.exportPDF}
           </Button>
           <Button onClick={() => exportService.exportToExcel(statsData, viewType)} variant="success" size="lg">
-            📊 Exporter Excel
+            {t.exportExcel}
           </Button>
           <Button onClick={() => exportService.exportToWord(statsData, viewType)} variant="secondary" size="lg">
-            📝 Exporter Word
+            {t.exportWord}
           </Button>
         </div>
       </div>

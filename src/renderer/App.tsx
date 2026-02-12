@@ -2,17 +2,30 @@ import { useState } from 'react';
 import { CaseFormArabic } from '@/features/cases/CaseFormArabic';
 import { CaseList } from '@/features/cases/CaseList';
 import { Dashboard } from '@/features/dashboard/Dashboard';
-import { LayoutDashboard, FileText, List, Shield } from 'lucide-react';
+import { Calendar } from '@/features/calendar/Calendar';
+import { Settings } from '@/features/settings/Settings';
+import { LayoutDashboard, FileText, List, Shield, Languages, CalendarDays, Settings as SettingsIcon } from 'lucide-react';
+import { useLanguage } from './i18n/LanguageContext';
+import type { Language } from './i18n/translations';
 
-type View = 'dashboard' | 'new-case' | 'cases';
+type View = 'dashboard' | 'new-case' | 'cases' | 'calendar' | 'settings';
 
 export default function App() {
   const [currentView, setCurrentView] = useState<View>('dashboard');
+  const { language, setLanguage, t } = useLanguage();
 
   const navItems = [
-    { id: 'dashboard' as View, label: 'Tableau de Bord', icon: LayoutDashboard, gradient: 'from-blue-500 to-indigo-600' },
-    { id: 'new-case' as View, label: 'Nouveau Cas', icon: FileText, gradient: 'from-emerald-500 to-green-600' },
-    { id: 'cases' as View, label: 'Liste des Cas', icon: List, gradient: 'from-purple-500 to-pink-600' }
+    { id: 'dashboard' as View, label: t.dashboard, icon: LayoutDashboard, gradient: 'from-blue-500 to-indigo-600' },
+    { id: 'new-case' as View, label: t.newCase, icon: FileText, gradient: 'from-emerald-500 to-green-600' },
+    { id: 'cases' as View, label: t.casesList, icon: List, gradient: 'from-purple-500 to-pink-600' },
+    { id: 'calendar' as View, label: t.calendar, icon: CalendarDays, gradient: 'from-orange-500 to-red-600' },
+    { id: 'settings' as View, label: t.settings || 'Settings', icon: SettingsIcon, gradient: 'from-slate-500 to-gray-600' }
+  ];
+
+  const languages: { code: Language; label: string; flag: string }[] = [
+    { code: 'ar', label: 'العربية', flag: '🇲🇦' },
+    { code: 'fr', label: 'Français', flag: '🇫🇷' },
+    { code: 'en', label: 'English', flag: 'EN' }
   ];
 
   return (
@@ -26,8 +39,8 @@ export default function App() {
               <Shield className="w-8 h-8 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-black bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">CAPE</h1>
-              <p className="text-xs text-slate-600 font-medium">Protection de l'Enfance</p>
+              <h1 className="text-3xl font-black bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">{t.appName}</h1>
+              <p className="text-xs text-slate-600 font-medium">{t.appSubtitle}</p>
             </div>
           </div>
         </div>
@@ -60,11 +73,37 @@ export default function App() {
           })}
         </nav>
 
+        {/* Language Switcher */}
+        <div className="p-4 border-t border-white/10">
+          <div className="glass rounded-xl p-3">
+            <div className="flex items-center gap-2 mb-2">
+              <Languages className="w-4 h-4 text-slate-600" />
+              <span className="text-xs font-semibold text-slate-700">Language</span>
+            </div>
+            <div className="flex gap-1">
+              {languages.map(lang => (
+                <button
+                  key={lang.code}
+                  onClick={() => setLanguage(lang.code)}
+                  className={`flex-1 px-2 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                    language === lang.code
+                      ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg'
+                      : 'bg-white/50 text-slate-600 hover:bg-white/80'
+                  }`}
+                  title={lang.label}
+                >
+                  {lang.flag}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
         {/* Footer */}
         <div className="p-6 border-t border-white/10">
           <div className="glass rounded-xl p-4 text-center">
-            <p className="text-xs text-slate-600 font-medium">🔒 Données 100% Locales</p>
-            <p className="text-xs text-slate-500 mt-1">Sécurisé & Confidentiel</p>
+            <p className="text-xs text-slate-600 font-medium">{t.localData}</p>
+            <p className="text-xs text-slate-500 mt-1">{t.secureConfidential}</p>
           </div>
         </div>
       </aside>
@@ -77,7 +116,7 @@ export default function App() {
             <h2 className="text-4xl font-black text-slate-800 mb-2">
               {navItems.find(item => item.id === currentView)?.label}
             </h2>
-            <p className="text-slate-600">Gestion professionnelle des cas de protection</p>
+            <p className="text-slate-600">{t.professionalManagement}</p>
           </div>
 
           {/* Content */}
@@ -85,6 +124,8 @@ export default function App() {
             {currentView === 'dashboard' && <Dashboard />}
             {currentView === 'new-case' && <CaseFormArabic onSuccess={() => setCurrentView('cases')} />}
             {currentView === 'cases' && <CaseList />}
+            {currentView === 'calendar' && <Calendar />}
+            {currentView === 'settings' && <Settings />}
           </div>
         </div>
       </main>

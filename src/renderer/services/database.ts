@@ -3,70 +3,73 @@ import type { Case, Database } from '@/types';
 const DB_KEY = 'cape_database';
 
 class DatabaseService {
-  private async readDB(): Promise<Database> {
+  private getDB(): Database {
     try {
-      // Try Electron first, fallback to localStorage
-      if (window.electron) {
-        const data = await window.electron.readFile('data/database.json');
-        return JSON.parse(data);
-      } else {
-        const data = localStorage.getItem(DB_KEY);
-        return data ? JSON.parse(data) : this.getDefaultDB();
-      }
+      const data = localStorage.getItem(DB_KEY);
+      return data ? JSON.parse(data) : this.getDefaultDB();
     } catch {
       return this.getDefaultDB();
     }
   }
 
-  private async writeDB(db: Database): Promise<void> {
-    try {
-      if (window.electron) {
-        await window.electron.writeFile('data/database.json', JSON.stringify(db, null, 2));
-      } else {
-        localStorage.setItem(DB_KEY, JSON.stringify(db, null, 2));
-      }
-    } catch (error) {
-      console.error('Failed to write database:', error);
-    }
+  private saveDB(db: Database): void {
+    localStorage.setItem(DB_KEY, JSON.stringify(db, null, 2));
   }
 
   private getDefaultDB(): Database {
     return {
       cases: [],
       users: [],
-      settings: {}
+      settings: {},
+      calendarEvents: []
     };
   }
 
   async getAllCases(): Promise<Case[]> {
-    const db = await this.readDB();
-    return db.cases;
+    return this.getDB().cases;
   }
 
   async addCase(caseData: Omit<Case, 'id' | 'createdAt'>): Promise<Case> {
-    const db = await this.readDB();
+    const db = this.getDB();
     const newCase: Case = {
       ...caseData,
       id: crypto.randomUUID(),
       createdAt: new Date().toISOString()
     };
     db.cases.push(newCase);
-    await this.writeDB(db);
+    this.saveDB(db);
     return newCase;
   }
 
   async getCasesByDateRange(startDate: string, endDate: string): Promise<Case[]> {
-    const cases = await this.getAllCases();
-    return cases.filter(c => c.date >= startDate && c.date <= endDate);
+    return this.getDB().cases.filter(c => c.date >= startDate && c.date <= endDate);
   }
 
   async searchCases(query: string): Promise<Case[]> {
-    const cases = await this.getAllCases();
     const lowerQuery = query.toLowerCase();
-    return cases.filter(c => 
+    return this.getDB().cases.filter(c => 
       c.name.toLowerCase().includes(lowerQuery) ||
       c.notes.toLowerCase().includes(lowerQuery)
     );
+  }
+
+  async getCalendarEvents(): Promise<any[]> {
+    return this.getDB().calendarEvents || [];
+  }
+
+  async saveCalendarEvents(events: any[]): Promise<void> {
+    const db = this.getDB();
+    db.calendarEvents = events;
+    this.saveDB(db);
+  }
+
+  async exportData(): Promise<string> {
+    return JSON.stringify(this.getDB(), null, 2);
+  }
+
+  async importData(jsonData: string): Promise<void> {
+    const data = JSON.parse(jsonData);
+    this.saveDB(data);
   }
 }
 
