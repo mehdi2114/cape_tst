@@ -146,6 +146,7 @@ export const translations = {
     exportError: 'فشل التصدير!',
     importSuccess: 'تم استيراد البيانات بنجاح! سيتم تحديث الصفحة.',
     importError: 'فشل الاستيراد! ملف غير صالح.',
+    editCase: 'تعديل الحالة',
   },
   fr: {
     // Navigation
@@ -294,6 +295,7 @@ export const translations = {
     exportError: 'Échec de l\'exportation!',
     importSuccess: 'Données importées avec succès! La page va se rafraîchir.',
     importError: 'Échec de l\'importation! Fichier invalide.',
+    editCase: 'Modifier le Cas',
   },
   en: {
     // Navigation
@@ -442,6 +444,7 @@ export const translations = {
     exportError: 'Export failed!',
     importSuccess: 'Data imported successfully! Page will refresh.',
     importError: 'Import failed! Invalid file.',
+    editCase: 'Edit Case',
   }
 };
 

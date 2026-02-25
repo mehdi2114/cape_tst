@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, PieChart, Pie, Cell, ResponsiveContainer, LineChart, Line } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, Cell, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { Button } from '@/components/Button';
 import { Select } from '@/components/Select';
 import { db } from '@/services/database';
 import { stats } from '@/services/stats';
 import { exportService } from '@/services/export';
 import type { YearlyStats, MonthlyStats } from '@/types';
-import { FileDown, TrendingUp, Users, Calendar, BarChart3 } from 'lucide-react';
+import { FileDown, TrendingUp, Users, BarChart3 } from 'lucide-react';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { monthNames } from '@/i18n/translations';
 
@@ -213,7 +213,7 @@ export function Dashboard() {
                   }} 
                 />
                 <Bar dataKey="value" radius={[8, 8, 0, 0]}>
-                  {problemsChartData.map((entry, index) => (
+                  {problemsChartData.map((_entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Bar>

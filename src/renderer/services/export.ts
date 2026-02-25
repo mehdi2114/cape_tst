@@ -3,7 +3,6 @@ import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { Document, Packer, Paragraph, Table, TableCell, TableRow, TextRun } from 'docx';
 import type { YearlyStats, MonthlyStats } from '@/types';
-import { format } from 'date-fns';
 
 class ExportService {
   async exportToPDF(stats: YearlyStats | MonthlyStats, type: 'monthly' | 'yearly'): Promise<void> {

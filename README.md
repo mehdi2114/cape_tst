@@ -1,84 +1,31 @@
-# 🏥 CAPE - Centre d'Accompagnement pour la Protection de l'Enfance
+# 🏥 CAPE - Child Protection App
 
-![Version](https://img.shields.io/badge/version-1.0.0-green?style=flat-square)
-![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)
+## Quick Start
 
-**Application web moderne pour la gestion des cas de protection de l'enfance**
+### First Time:
+1. Double-click: `setup.bat`
+2. Double-click: `CAPE.vbs`
 
----
+### Daily Use:
+- Double-click: `CAPE.vbs`
 
-## ✨ Fonctionnalités
+### Share with Others:
+1. Double-click: `create-package.bat`
+2. Zip the `CAPE-Package` folder
+3. Share!
 
-### 📝 Gestion des Cas
-- ✅ Formulaire complet multilingue (العربية/Français/English)
-- ✅ Informations complètes: enfant, parents, agresseur
-- ✅ Modification et suppression des cas
-- ✅ Recherche rapide
+## Features
+- Multi-language (Arabic, French, English)
+- Case management
+- Dashboard with statistics
+- Calendar
+- Export/Import data
+- 100% Local & Secure
 
-### 📊 Tableau de Bord
-- ✅ Statistiques mensuelles et annuelles
-- ✅ Graphiques interactifs
-- ✅ Répartition par genre
-- ✅ Export PDF/Excel/Word
+## Files
+- `CAPE.vbs` - Start the app (silent)
+- `start-cape.bat` - Start the app (with console)
+- `setup.bat` - First-time installation
+- `create-package.bat` - Create distribution package
 
-### 📅 Calendrier
-- ✅ Gestion des rendez-vous
-- ✅ Vue mensuelle
-- ✅ Événements personnalisés
-
-### 🌍 Multi-langue
-- ✅ Arabe (RTL)
-- ✅ Français
-- ✅ English
-
-### 💾 Données
-- ✅ Sauvegarde automatique (localStorage)
-- ✅ Export/Import JSON
-- ✅ 100% Local - Aucune connexion requise
-
----
-
-## 🚀 Installation
-
-```bash
-git clone https://github.com/mehdi2114/cape-app.git
-cd cape-app
-npm install
-```
-
-## 💻 Utilisation
-
-```bash
-npm run dev
-```
-
-Ouvrir: **http://localhost:5173**
-
-### Raccourci Windows
-Double-cliquer sur `start-cape.bat`
-
----
-
-## 🛠️ Technologies
-
-- React 18 + TypeScript
-- Vite
-- Tailwind CSS
-- Recharts
-- jsPDF / xlsx / docx
-
----
-
-## 👨‍💻 Auteur
-
-**Mehdi** - [@mehdi2114](https://github.com/mehdi2114)
-
----
-
-## 📝 License
-
-MIT License
-
----
-
-**Made with ❤️ for Child Protection**
+Made with ❤️ for Child Protection
